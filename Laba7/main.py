@@ -51,6 +51,7 @@ def CHI(n, sampl, F):
         chi2_B += (hist[i] - n*p[i])**2 / (n*p[i])
 
     # Step 6:
+    print(f"chi2_B = {round(chi2_B, 6)} and kvantil = {round(kvantil, 6)}")
     if chi2_B < kvantil:
         return True  # Null hypothesis is accepted
     else:
