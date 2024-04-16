@@ -1,0 +1,76 @@
+\documentclass{article}
+\usepackage[margin=1cm]{graphicx} % Required for inserting images
+\usepackage[russian]{babel}
+\usepackage{caption}
+\usepackage{geometry}
+\usepackage{url}
+\title{Санкт-Петербургский политехнический университет
+Петра Великого
+Физико-механический институт
+Высшая школа прикладной математики и вычислительной
+физики}
+\date{}
+\begin{document}
+
+\maketitle
+\begin{center}
+Отчёт\\
+по лабораторным работам №7\\
+по дисциплине\\
+«Математическая статистика»
+\end{center}
+\bigskip
+\begin{flushright}
+Выполнил студент:\\
+Басалаев Даниил Александрович \\   
+группа:\\
+5030102/10201\\
+Проверил:\\
+доцент
+Баженов Александр Николаевич
+\end{flushright}
+
+\vspace*{\fill} \begin{center}Санкт-Петербург\end{center}
+
+\newpage
+\newgeometry{top=1cm, bottom=1cm, left=1cm, right=1cm} % Задаем узкие поля в 1 сантиметр
+\section{Проверка гипотезы о законе распределения генеральной совокупности. Метод хи-квадрат}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Выборка n = 20}
+  \label{tab:my_table}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    F_{real}$\backslash$F_{hip} & Нормальное & Стьюдента & Равномерное\\
+    \hline
+    Нормальное & верна & верна & не верна\\
+    \hline
+    Стьюдента & верна & верна & не верна\\
+    \hline
+    Равномерное & не верна & не верна & не верна\\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Выборка n = 100}
+  \label{tab:my_table}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    F_{real}$\backslash$F_{hip} & Нормальное & Стьюдента & Равномерное\\
+    \hline
+    Нормальное & верна & верна & не верна\\
+    \hline
+    Стьюдента & не верна & верна & не верна\\
+    \hline
+    Равномерное & не верна & не верна & верна\\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{GitHub}
+\url{https://github.com/11AgReS1SoR11/MatStat/tree/main/Laba7}
+
+\end{document}
