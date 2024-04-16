@@ -2,33 +2,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import math
-np.random.seed(42)
-
-def quartile_1_4(sample):
-    n = len(sample)
-    sorted_sample = sorted(sample)
-    index = n // 4
-    if n % 4 == 0:
-        return sorted_sample[index - 1]
-    else:
-        return sorted_sample[index]
-
-def quartile_3_4(sample):
-    n = len(sample)
-    sorted_sample = sorted(sample)
-    index = 3 * n // 4
-    if n % 4 == 0:
-        return sorted_sample[index - 1]
-    else:
-        return sorted_sample[index]
+np.random.seed(50)
     
-def Boxplot(sample1, sample2, title):
-    # Q1 = quartile_1_4(sample)
-    # Q3 = quartile_3_4(sample)
-    # X1 = Q1 - 3/2*(Q3 - Q1)
-    # X3 = Q3 + 3/2*(Q3 - Q1)
-    # outliers = [x for x in sample if x > X3 or x < X1]
 
+def Boxplot(sample1, sample2, title):
     # Создаем boxplot для первого набора данных
     plt.boxplot(sample1, vert = False, positions=[1], widths=0.6)
 
@@ -41,9 +18,8 @@ def Boxplot(sample1, sample2, title):
     plt.title(title)
     plt.xlabel('x')
 
-    # Отображаем график
-    plt.savefig(f'{title}')
-
+    plt.savefig(title)  # Сохраняем график в файл
+    plt.close()  # Закрываем текущий график, чтобы он не отображался в блокноте
 
 
 def main():
@@ -59,11 +35,11 @@ def main():
     puasson2 = np.random.poisson(10, size=100)
     uniform2 = np.random.uniform(-(math.sqrt(3)), math.sqrt(3), 100)
 
-    Boxplot(normal1, normal2, "normal")
-    Boxplot(cauchy1, cauchy2, "cauchy")
-    Boxplot(student1, student2, "student")
-    Boxplot(puasson1, puasson2, "puasson")
-    Boxplot(uniform1, uniform2, "uniform")
+    Boxplot(normal1, normal2, "normal 3-4")
+    Boxplot(cauchy1, cauchy2, "cauchy 3-4")
+    Boxplot(student1, student2, "student 3-4")
+    Boxplot(puasson1, puasson2, "puasson 3-4")
+    Boxplot(uniform1, uniform2, "uniform 3-4")
 
 
 if __name__ == "__main__":

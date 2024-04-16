@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import math
-np.random.seed(42)
+np.random.seed(30)
 
 normal = np.random.standard_normal(900)
 cauchy = np.random.standard_cauchy(201)

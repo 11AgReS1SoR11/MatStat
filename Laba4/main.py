@@ -16,7 +16,7 @@ def drawInfoNormal(array_of_dispersion, array_of_mathematical_expectation, power
         plt.plot([array_of_dispersion[3], array_of_dispersion[3]], [1.1, 1.1], marker='o', markersize=10, color='purple', zorder=3)  # Конечная точка
         plt.legend()
         plt.title('Доверительный интервал дисперсии для нормального распределения')
-        plt.savefig(f'{"intervalDispersion_normal"}')
+        plt.savefig(f'{"sigma, normal.png"}')
 
         # Доверительные интервалы средневыборочного матожидания
         plt.figure(figsize=(10, 6))
@@ -29,7 +29,7 @@ def drawInfoNormal(array_of_dispersion, array_of_mathematical_expectation, power
         plt.plot([array_of_mathematical_expectation[3], array_of_mathematical_expectation[3]], [1.1, 1.1], marker='o', markersize=10, color='purple', zorder=3)  # Конечная точка
         plt.legend()
         plt.title('Доверительный интервал матожидания для нормального распределения')
-        plt.savefig(f'{"intervalMathematicalExpectation_normal"}')
+        plt.savefig(f'{"math exp, normal.png"}')
 
 def drawInfoPoisson(array_of_dispersion, array_of_mathematical_expectation, powers):
 
@@ -44,7 +44,7 @@ def drawInfoPoisson(array_of_dispersion, array_of_mathematical_expectation, powe
         plt.plot([array_of_dispersion[3], array_of_dispersion[3]], [1.1, 1.1], marker='o', markersize=10, color='purple', zorder=3)  # Конечная точка
         plt.legend()
         plt.title('Доверительный интервал дисперсии для распределения Пуассона')
-        plt.savefig(f'{"intervalDispersion_Poisson"}')
+        plt.savefig(f'{"sigma, random.png"}')
 
         # Доверительные интервалы средневыборочного матожидания
         plt.figure(figsize=(10, 6))
@@ -57,7 +57,7 @@ def drawInfoPoisson(array_of_dispersion, array_of_mathematical_expectation, powe
         plt.plot([array_of_mathematical_expectation[3], array_of_mathematical_expectation[3]], [1.1, 1.1], marker='o', markersize=10, color='purple', zorder=3)  # Конечная точка
         plt.legend()
         plt.title('Доверительный интервал матожидания для распределения Пуассона')
-        plt.savefig(f'{"intervalMathematicalExpectation_Poisson"}')
+        plt.savefig(f'{"math exp, random.png"}')
 
 
 def calculate_normal(quantiles, powers):
@@ -106,7 +106,7 @@ def calculate_normal(quantiles, powers):
         plt.axvline(x=RightMathematicalExpectation, color='red', linewidth=2, clip_on=False, label='max \mu')
         plt.plot(RightMathematicalExpectation, 0, marker='o', markersize=10, color='red')
         plt.legend()
-        plt.savefig(f'{"normal"}, size {power}.png')
+        plt.savefig(f'hist, {"normal"}, n = {power}.png')
 
     drawInfoNormal(array_of_dispersion, array_of_mathematical_expectation, powers)
 
@@ -161,7 +161,7 @@ def pyasson_distribution(quantiles, powers):
         plt.axvline(x=RightMathematicalExpectation, color='red', linewidth=2, clip_on=False, label='max \mu')
         plt.plot(RightMathematicalExpectation, 0, marker='o', markersize=10, color='red')
 
-        plt.savefig(f'{"poisson"}, size {power}.png')
+        plt.savefig(f'hist, {"poisson"}, n = {power}.png')
     
     drawInfoPoisson(array_of_dispersion, array_of_mathematical_expectation, powers)
 
