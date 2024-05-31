@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.optimize import minimize, least_squares
 import matplotlib.pyplot as plt
-
+np.random.seed(61)
 
 def lab6():
     a = -1.8
@@ -12,7 +12,8 @@ def lab6():
     y = x * 2 + 2 + e
     plt.scatter(x, y)
 
-    plt.show()
+    plt.savefig("first")
+    plt.close()
     A = np.vstack([x, np.ones(len(x))]).T
     A
     b_sq, a_sq = np.linalg.lstsq(A, y, rcond=None)[0]
@@ -23,7 +24,8 @@ def lab6():
     y_p = x_p * a_sq + b_sq
 
     plt.plot(x_p, y_p)
-    plt.show()
+    plt.savefig("second")
+    plt.close()
     def err_func(params, x, y):
         return np.sum(np.abs(params[0] + params[1] * x - y))
 
@@ -34,7 +36,8 @@ def lab6():
     x_p = np.linspace(a, b, 100)
     y_p = x_p * a_abs + b_abs
     plt.plot(x_p, y_p)
-    plt.show()
+    plt.savefig("thrird")
+    plt.close()
     y_mod = y.copy()
     y_mod[0] += 10
     y_mod[-1] -= 10
@@ -48,17 +51,22 @@ def lab6():
     a_abs_mod, b_abs_mod = minimize(err_func, [0, 0], args=(x, y_mod)).x
     a_abs_mod, b_abs_mod
     print(f" a_abs_mod, b_abs_mod = {a_abs_mod, b_abs_mod}")
-    plt.show()
+    plt.savefig("fourth")
+    plt.close()
     plt.scatter(x, y_mod)
     x_p = np.linspace(a, b, 100)
     y_p = x_p * a_sq + b_sq
     plt.plot(x_p, y_p)
 
-    plt.show()
+    plt.savefig("fifth")
+    plt.close()
     plt.scatter(x, y_mod)
 
     x_p = np.linspace(a, b, 100)
     y_p = x_p * a_abs + b_abs
     plt.plot(x_p, y_p)
 
-    plt.show()
+    plt.savefig("sixth")
+    plt.close()
+
+lab6()

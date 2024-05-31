@@ -8,53 +8,85 @@ import math
 from matplotlib.patches import Ellipse
 fileName = 'KLM 5 reflection D=1.binary.bgData'
 
+
 def eigsorted(cov):
     vals, vecs = np.linalg.eigh(cov)
     order = vals.argsort()[::-1]
     return vals[order], vecs[:,order]
 
-def Sum(matrix):
+
+def Sum(matrix, low, upp):
     sum_matrix = 0
     for row in matrix:
         for element in row:
-            sum_matrix += element
+            if (low <= element <= upp):
+                sum_matrix += element
     return sum_matrix
 
-def fooo(data):
+
+def calculate_variance(data):
+    n = len(data)
+    if n < 2:
+        raise ValueError("Для вычисления дисперсии требуется как минимум два значения.")
+
+    mean = sum(data) / n
+    variance = sum((x - mean) ** 2 for x in data) / (n - 1)
+    return variance
+
+
+def fooo(data, low, upp):
     X, Y = 0, 0
     for i, row in enumerate(data):
         for j, elem in enumerate(row):
-            X += elem * j
-    X = X / Sum(data)
+            if (low <= elem <= upp):
+                X += elem * j
+    X = X / Sum(data, low, upp)
     for i, row in enumerate(data):
         for j, elem in enumerate(row):
-            Y += elem * i
-    Y = Y / Sum(data)
+            if (low <= elem <= upp):
+                Y += elem * i
+    Y = Y / Sum(data, low, upp)
     Sx, Sy = 0, 0
     for i, row in enumerate(data):
         for j, elem in enumerate(row):
-            Sx += (elem * j - X) ** 2
-    Sx = Sx / Sum(data)
+            if (low <= elem <= upp):
+                Sx += elem * (j - X) ** 2
+    Sx = Sx / Sum(data, low, upp)
     for i, row in enumerate(data):
         for j, elem in enumerate(row):
-            Sy += (elem * i - Y) ** 2
-    Sy = Sy / Sum(data)
+            if (low <= elem <= upp):
+                Sy += elem * (i - Y) ** 2
+    Sy = Sy / Sum(data, low, upp)
 
     return X, Y, Sx**0.5, Sy**0.5
+    
 
-def plot_points_with_ellipses(data, ax):
+def draw_sep(x, y, ellipse):
+    fig, ax = plt.subplots()  # Создаем объекты Figure и Axes
+    ax.scatter(x, y, color='blue', label='Points')  # Рисуем точки
+    ax.add_patch(ellipse)
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.legend()
+    plt.savefig("ccc")
+    plt.close()
 
-    Xmean, Ymean, Sx, Sy = fooo(data)
+
+def plot_points_with_ellipses_Maxim(data, low, upp, ax, x, y):
+
+    Xmean, Ymean, Sx, Sy = fooo(data, low, upp)
 
     cov = 0
     for i, row in enumerate(data):
         for j, elem in enumerate(row):
-            cov += (elem * i - Ymean) * (elem * j - Xmean)    
-    cov = cov / Sum(data)
+            if (low <= elem <= upp):
+                cov += elem * (i - Ymean) * (j - Xmean)
+    cov = cov / Sum(data, low, upp)
 
     r = cov / (Sx * Sy)
-    ell_radius_x = (Sx / Sy * 150)
-    ell_radius_y = 150 #* 2
+    ell_radius_x = (-4*(1 - r*r)*math.log((upp + low) / getMax(data) / 2))*Sx #(Sx / Sy * 250)
+    ell_radius_y = (-4*(1 - r*r)*math.log((upp + low) / getMax(data) / 2))*Sy #250
+    print(f"x = {ell_radius_x}, y = {ell_radius_y}, r = {r}, log = {math.log((upp + low) / getMax(data) / 2)}")
 
     theta = np.degrees(math.atan(2 * r * Sx * Sy / (Sx ** 2 - Sy ** 2)) / 2)
 
@@ -66,14 +98,66 @@ def plot_points_with_ellipses(data, ax):
     print("Theta ", theta)
 
     ellipse = Ellipse(
-        (Xmean * 1.2, Ymean * 1.2),
+        (Xmean, Ymean),
         width=ell_radius_x,
         height=ell_radius_y,
-        angle=-theta,
+        angle=theta,
         color='black',
         alpha=0.5
     )
+    draw_sep(x, y, ellipse)
+    ax.add_patch(ellipse)
+    return ax
 
+def covariance(x, y):
+    if len(x) != len(y):
+        raise ValueError("Arrays x and y must have the same length")
+    
+    n = len(x)
+    mean_x = sum(x) / n
+    mean_y = sum(y) / n
+    
+    cov = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n)) / (n - 1)
+    
+    return cov
+
+
+def plot_points_with_ellipses(x, y, ax, low = None, upp = None):
+
+    Xmean = np.mean(x)
+    Ymean = np.mean(y)
+    Sx = calculate_variance(x)
+    Sy = calculate_variance(y)
+    cov = covariance(x, y)
+
+    r = cov / (Sx * Sy)
+    ell_radius_x = (-4*(1 - r*r)*math.log((upp + low) / 2))*Sx#(Sx / Sy * 300)
+    ell_radius_y = (-4*(1 - r*r)*math.log((upp + low) / 2))*Sy#300 #* 2
+    # ell_radius_x = 1/2 * (Sx**2 + Sy**2 + (abs(Sx**2 - Sy**2) + 4*cov**2)**0.5)#/10e10
+    # ell_radius_y = 1/2 * (Sx**2 + Sy**2 - (abs(Sx**2 - Sy**2) + 4*cov**2)**0.5)#/10e10
+    # print(Sx**2)
+    # print(1/2 * (Sx**2 + Sy**2 + (Sx**2 - Sy**2 + 4*cov**2)**0.5))
+    print(f"radius: x = {ell_radius_x}, y = {ell_radius_y}")
+
+
+    theta = np.degrees(math.atan(2 * r * Sx * Sy / (Sx ** 2 - Sy ** 2)) / 2)
+
+    print("Sx", Sx)
+    print("Sy ", Sy)
+    print("cov ", cov)
+    print("Xmean ", Xmean)
+    print("Ymean ", Ymean)
+    print("Theta ", theta)
+
+    ellipse = Ellipse(
+        (Xmean, Ymean),
+        width=ell_radius_x *2,
+        height=ell_radius_y *2,
+        angle=theta,
+        color='black',
+        alpha=0.5
+    )
+    draw_sep(x, y, ellipse)
     ax.add_patch(ellipse)
     return ax
 
@@ -91,6 +175,27 @@ def traverse_datasets(hdf_file):
         for path, _ in h5py_dataset_iterator(f):
             yield path
 
+
+def getMax(data):
+    m = -1
+    for i in data:
+        m = max(m, max(i))
+    return m
+
+
+def find_slice_indices(data, left, right):
+    x_indices = []
+    y_indices = []
+
+    for i, row in enumerate(data):
+        for j, value in enumerate(row):
+            if left <= value <= right:
+                x_indices.append(j)
+                y_indices.append(i)
+
+    return x_indices, y_indices
+
+
 #сначала узнаю имена подгрупп, в которых лежат данные
 with h5py.File(fileName, 'r') as f:
     for dset in traverse_datasets(fileName):
@@ -99,12 +204,21 @@ with h5py.File(fileName, 'r') as f:
         print('Data type:', f[dset].dtype)
     dataset = f["/BG_DATA/1/DATA"]
     data = np.reshape(dataset, (1920, 1000), 'F')
+
+    # left_bound = int(input("Введите левую границу: "))
+    # right_bound = int(input("Введите правую границу: "))
+    print(0.5*getMax(data))
+    left_bound = 0.58*getMax(data)
+    right_bound = 0.60*getMax(data)
+    x_indices, y_indices = find_slice_indices(data[:,:], left_bound, right_bound)
+
     fig, ax = plt.subplots()
     pylab.plot(data)
-    imgplot = ax.imshow(data[200:500, :], origin='lower')
+    imgplot = ax.imshow(data[:, :], origin='lower')
     imgplot.set_cmap('nipy_spectral')
     colorbar = plt.colorbar(imgplot, orientation='horizontal')
-    plot_points_with_ellipses(data[200:500, :], ax)
+    #plot_points_with_ellipses(x_indices, y_indices, ax, left_bound / getMax(data), right_bound / getMax(data))
+    #plot_points_with_ellipses_Maxim(data[200:500, 400:900], left_bound, right_bound, ax, x_indices, y_indices)
     plt.savefig("aaa")
     plt.show()
     plt.close()

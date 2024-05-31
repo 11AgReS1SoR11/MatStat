@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
 import math
-np.random.seed(50)
+np.random.seed(61)
     
 
 def Boxplot(sample1, sample2, title):

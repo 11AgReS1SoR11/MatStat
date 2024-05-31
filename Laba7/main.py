@@ -47,7 +47,9 @@ def CHI(n, sampl, F):
 
     # Step 5:
     chi2_B = 0
+    print(f'| i | n_i|        n*p_i       |   (n_i - n*p_i)^2  | (n_i - n*p_i)^2 / (n*p_i) |')
     for i in range(k - 1):
+        print(f'| {round(i, 6)} | {round(hist[i], 6)} | {round(n*p[i], 6)} | {round((hist[i] - n*p[i])**2, 6)} | {round((hist[i] - n*p[i])**2 / (n*p[i]), 6)}')
         chi2_B += (hist[i] - n*p[i])**2 / (n*p[i])
 
     # Step 6:
